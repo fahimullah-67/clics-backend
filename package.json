@@ -1,0 +1,17 @@
+{
+  "name": "clics-be",
+  "version": "1.0.0",
+  "description": "CLICS Backend Logic.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "Fahim-Ullah",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1"
+  }
+}
