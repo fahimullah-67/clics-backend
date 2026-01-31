@@ -1,28 +1,26 @@
-import 
-{ 
-    registerUser,
-    loginUser,
-    getUserProfile,
-    updateUserProfile,
-    deleteUserAccount,
-    logoutUser,
-    getAllUsers,
-    passwordReset,
-    changePassword,
- } 
-from "./user.controller";
+import {
+  registerUser,
+  loginUser,
+  getUserProfile,
+  updateUserProfile,
+  deleteUserAccount,
+  logoutUser,
+  getAllUsers,
+  passwordReset,
+  changePassword,
+} from "./user.controller";
 
 import express from "express";
 const router = express.Router();
 
-router.post("register", registerUser);
-router.get("login", loginUser);
-router.get("user:/:id", getUserProfile);
-router.put("updateProfile/:id", updateUserProfile);
-router.delete("delete/:id", deleteUserAccount);
-router.post("logout", logoutUser);
-router.get("user", getAllUsers);
-router.put("resetpassword", passwordReset);
-router.put("change_password", changePassword);
+router.route("/user/register").post(registerUser);
+router.route("/user/login").get(loginUser);
+router.route("/current-user").get(getUserProfile);
+router.route("/update-user-profile").put(updateUserProfile);
+router.route("/user-delete").delete(deleteUserAccount);
+router.route("/user-logout").post(logoutUser);
+router.route("/all-user").get(getAllUsers);
+router.route("/resetpassword").put(passwordReset);
+router.route("/change_password").put(changePassword);
 
-export default router;
+export  { router as userRouter};
