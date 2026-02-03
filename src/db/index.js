@@ -1,5 +1,5 @@
-import { app } from "../app";
-import { DB_NAME } from "../constant.js";
+import { app } from "../../app.jsx";
+import { DB_NAME } from "../../constant.js";
 import mongoose from "mongoose";
 
 
