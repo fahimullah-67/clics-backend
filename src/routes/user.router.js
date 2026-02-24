@@ -8,7 +8,7 @@ import {
   getAllUsers,
   passwordReset,
   changePassword,
-} from "./user.controller";
+} from "../controllers/user.controller.js";
 
 import express from "express";
 const router = express.Router();
