@@ -75,6 +75,10 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
+    //debugging logs
+    console.log("Headers:", req.headers);
+    console.log("Body:", req.body);
+
     const { email, password } = req.body;
 
     const existingUser = await User.findOne({ email: email });
@@ -130,7 +134,7 @@ export const loginUser = async (req, res) => {
   } catch (error) {
     console.log("Error logging in User", error);
     res.status(500).json({
-      message: "Internal Server Error",
+      message: "Internal Server Error/Use Login",
       error: error.message,
     });
   }

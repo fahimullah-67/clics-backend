@@ -15,7 +15,7 @@ const router = express.Router();
 import { verifyToken } from "../middlewares/verifyToken.middleware.js";
 
 router.route("/user/register").post(registerUser);
-router.route("/user/login").get(loginUser);
+router.route("/user/login").post(loginUser);
 router.route("/current-user").get(verifyToken, getUserProfile);
 router.route("/update-user-profile/:id").put(verifyToken, updateUserProfile);
 router.route("/user-delete").delete(deleteUserAccount);
