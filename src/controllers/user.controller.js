@@ -2,9 +2,11 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
 dotenv.config();
 
-const JWT_SECRET = process.env.JWT_SECRET || "$#5fahim@1234";
+const JWT_SECRET = process.env.JWT_SECRET; //|| "$#5fahim@1234";
 
 export const registerUser = async (req, res) => {
   try {
@@ -27,16 +29,19 @@ export const registerUser = async (req, res) => {
     });
     await newUser.save();
 
+    // const createUser = newUser().select(" -password")
+
     const payload = {
       userid: newUser._id,
       username: newUser.username,
       email: newUser.email,
     };
+
     const token = jwt.sign(
       {
         payload,
-        JWT_SECRET,
       },
+      JWT_SECRET,
       {
         expiresIn: "7d",
       },
@@ -44,20 +49,21 @@ export const registerUser = async (req, res) => {
 
     res.cookie("jwt", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
+      secure: false, //process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({
-      message: "User Registered SuccessFully",
-      data: {
-        userId: newUser._id,
-        username: newUser.username,
-        email: newUser.email,
-        token: token,
-      },
-    });
+    const data = {
+      userId: newUser._id,
+      username: newUser.username,
+      email: newUser.email,
+      token: token,
+    };
+
+    res
+      .status(201)
+      .json(new ApiResponse(200, "User Registered SuccessFully", data));
   } catch (error) {
     console.log("Error registering user:", error);
     res.status(500).json({
@@ -91,15 +97,15 @@ export const loginUser = async (req, res) => {
     }
 
     const payload = {
-      userid: newUser._id,
-      username: newUser.username,
-      email: newUser.email,
+      userid: existingUser._id,
+      username: existingUser.username,
+      email: existingUser.email,
     };
     const token = jwt.sign(
       {
         payload,
-        JWT_SECRET,
       },
+      JWT_SECRET,
       {
         expiresIn: "7d",
       },
@@ -132,15 +138,26 @@ export const loginUser = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
   try {
-    const userId = req.userId;
+    res
+      .status(200)
+      .json(
+        new ApiResponse(201, req.user, "User Profile Retrieved Successfully"),
+      );
 
-    const user = await User.findById(userId).select(
-      "-password -__v -createdAt -updatedAt",
-    );
-    res.status(200).json({
-      message: "User Profile Retrieved Successfully",
-      data: user,
-    });
+    // const userId = req.userId;
+
+    // const user = await User.findById(userId, _id).select(
+    //   "-password -__v -createdAt -updatedAt",
+    // );
+
+    // if (!user) {
+    //   throw new ApiError(404, "User not Found!");
+    // }
+
+    // res.status(200).json({
+    //   message: "User Profile Retrieved Successfully",
+    //   data: req.user,
+    // });
   } catch (error) {
     console.log("Inter Server Error", error);
     res.status(500).json({
@@ -152,18 +169,21 @@ export const getUserProfile = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const userId = req.userId;
+    const userId = req.params;
     const { username, email } = req.body;
+    console.log("USER ID ", userId);
+    console.log("USER UserName ", username);
+    console.log("USER UserEmail ", email);
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        username,
         email,
+        username,
       },
       {
         new: true,
-        runValidators: true,
+        // runValidators: true,
       },
     ).select("-password -__v -createdAt");
 
@@ -173,16 +193,15 @@ export const updateUserProfile = async (req, res) => {
         error: "UserNotFound",
       });
     }
-    res.status(200).json({
-      message: "user Profile Updated Successfully",
-      updatedUser,
-    });
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(200, updatedUser, "user Profile Updated Successfully"),
+      );
   } catch (error) {
     console.log("Inter Server Error", error);
-    res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    res.status(500).json(new ApiError(500, "Internal Server Error"));
   }
 };
 

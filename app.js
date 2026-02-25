@@ -12,9 +12,9 @@ app.use(cors());
 app.use(express.json())
 app.use(cookieParser())
 
-app.use("/", () => {
-  `<>HOME PAGE</>`;
-}); 
+app.get("/", (req, res) => {
+  res.send("HOME PAGE");
+});
 app.use("/api/v1", userRouter)
 
 export {app};
