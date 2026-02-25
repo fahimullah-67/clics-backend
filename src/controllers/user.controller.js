@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
+import { sendEmail } from "../utils/sendEmail.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET; //|| "$#5fahim@1234";
@@ -53,6 +54,87 @@ export const registerUser = async (req, res) => {
       sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
+    await sendEmail(
+      newUser.email,
+      "Welcome to CLICS 🎉",
+      `
+  <div style="margin:0; padding:0; background-color:#f4f6f8; font-family: Arial, sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+      <tr>
+        <td align="center">
+          
+          <table width="600" cellpadding="0" cellspacing="0" 
+            style="background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+            
+            <!-- Header -->
+            <tr>
+              <td style="background:linear-gradient(90deg,#2563eb,#4f46e5); padding:25px; text-align:center;">
+                <h1 style="color:#ffffff; margin:0; font-size:26px;">
+                  Welcome to CLICS 🚀
+                </h1>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:35px; color:#333;">
+                <h2 style="margin-top:0;">Hi ${newUser.username},</h2>
+
+                <p style="font-size:16px; line-height:1.7;">
+                  🎉 Your account has been created successfully!
+                </p>
+
+                <p style="font-size:15px; line-height:1.7;">
+                  We’re excited to have you on board. You can now access your dashboard, 
+                  manage your account, and explore all features of our platform.
+                </p>
+
+                <!-- Info Box -->
+                <div style="background:#f1f5f9; padding:18px; border-radius:8px; margin:25px 0;">
+                  <p style="margin:0; font-size:14px;">
+                    <strong>Email:</strong> ${newUser.email}
+                  </p>
+                  <p style="margin:5px 0 0 0; font-size:14px;">
+                    <strong>Registered On:</strong> ${new Date().toLocaleDateString()}
+                  </p>
+                </div>
+
+                <!-- CTA Button -->
+                <div style="text-align:center; margin:30px 0;">
+                  <a href="http://clics.vercel.app/dashboard"
+                    style="background-color:#2563eb; color:#ffffff; 
+                    padding:14px 28px; text-decoration:none; 
+                    border-radius:6px; font-weight:bold; font-size:15px;">
+                    Go To Dashboard
+                  </a>
+                </div>
+
+                <p style="font-size:14px; color:#6b7280;">
+                  If you have any questions, feel free to contact our support team.
+                </p>
+
+                <p style="font-size:14px;">
+                  — The CLICS Team 💙
+                </p>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="background:#f8fafc; padding:18px; text-align:center; font-size:12px; color:#9ca3af;">
+                © ${new Date().getFullYear()} CLICS System. All rights reserved.
+              </td>
+            </tr>
+
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  </div>
+  `,
+    );
 
     const data = {
       userId: newUser._id,
@@ -121,6 +203,61 @@ export const loginUser = async (req, res) => {
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
+    await sendEmail(
+      existingUser.email,
+      "Login Alert 🚨",
+      `
+  <div style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 30px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+      
+      <tr>
+        <td style="background: linear-gradient(90deg, #2563eb, #4f46e5); padding: 20px; text-align: center;">
+          <h1 style="color: #ffffff; margin: 0;">Login Alert 🚨</h1>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="padding: 30px; color: #333;">
+          <h2 style="margin-top: 0;">Hello ${existingUser.username},</h2>
+          
+          <p style="font-size: 16px; line-height: 1.6;">
+            You just logged into your account successfully.
+          </p>
+
+          <div style="background-color: #f1f5f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+            <p style="margin: 0; font-size: 14px;">
+              <strong>Time:</strong> ${new Date().toLocaleString()}
+            </p>
+          </div>
+
+          <p style="font-size: 15px; line-height: 1.6;">
+            If this wasn’t you, please reset your password immediately to protect your account.
+          </p>
+
+          <div style="text-align: center; margin: 30px 0;">
+            <a href="http://clics.vercel.app/settings"
+              style="background-color: #ef4444; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 6px; font-weight: bold;">
+              Reset Password
+            </a>
+          </div>
+
+          <p style="font-size: 13px; color: #6b7280;">
+            This is an automated message from CLICS System. Please do not reply to this email.
+          </p>
+        </td>
+      </tr>
+
+      <tr>
+        <td style="background-color: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #9ca3af;">
+          © ${new Date().getFullYear()} CLICS System. All rights reserved.
+        </td>
+      </tr>
+
+    </table>
+  </div>
+  `,
+    );
 
     res.status(201).json({
       message: "User Login SuccessFully",
