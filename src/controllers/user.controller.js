@@ -60,12 +60,11 @@ export const registerUser = async (req, res) => {
       "Welcome to CLICS 🎉",
       `
   <div style="margin:0; padding:0; background-color:#f4f6f8; font-family: Arial, sans-serif;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="padding:30px 0;">
+    <table width="100%" style="border-collapse:collapse; padding:30px 0;">
       <tr>
         <td align="center">
           
-          <table width="600" cellpadding="0" cellspacing="0" 
-            style="background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.08);">
+          <table width="600" style="border-collapse:collapse; background:#ffffff; border-radius:12px; overflow:hidden; box-shadow:0 6px 18px rgba(0,0,0,0.08);">
             
             <!-- Header -->
             <tr>
@@ -158,8 +157,8 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     //debugging logs
-    console.log("Headers:", req.headers);
-    console.log("Body:", req.body);
+    // console.log("Headers:", req.headers);
+    // console.log("Body:", req.body);
 
     const { email, password } = req.body;
 
@@ -209,7 +208,7 @@ export const loginUser = async (req, res) => {
       "Login Alert 🚨",
       `
   <div style="font-family: Arial, sans-serif; background-color: #f4f6f8; padding: 30px;">
-    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <table width="100%" style="border-collapse:collapse; max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
       
       <tr>
         <td style="background: linear-gradient(90deg, #2563eb, #4f46e5); padding: 20px; text-align: center;">
@@ -363,7 +362,7 @@ export const deleteUserAccount = async (req, res) => {
   }
 };
 
-export const getAllUsers = async (req, res) => {
+export const getAllUsers = async (_req, res) => {
   try {
     const users = await User.find().select(
       "- password -__v -createdAt -updatedAt",
@@ -453,7 +452,7 @@ export const changePassword = async (req, res) => {
   }
 };
 
-export const logoutUser = async (req, res) => {
+export const logoutUser = async (_req, res) => {
   try {
     res.cookie("jwt", "", {
       httpOnly: true,
