@@ -181,6 +181,12 @@ export const loginUser = async (req, res) => {
       });
     }
 
+    if (existingUser.isLoggedIn) {
+      throw ApiError(400, "User already logged in");
+    }
+    existingUser.isLoggedIn = true;
+    await existingUser.save();
+
     const payload = {
       userid: existingUser._id,
       username: existingUser.username,
@@ -278,11 +284,19 @@ export const loginUser = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
   try {
+    const userId = req.user.userid;
+
+    const user = await User.findById(userId).select(
+      "-password -__v -createdAt -updatedAt",
+    );
+
+    if (!user) {
+      throw new ApiError(404, "User not Found");
+    }
+
     res
       .status(200)
-      .json(
-        new ApiResponse(201, req.user, "User Profile Retrieved Successfully"),
-      );
+      .json(new ApiResponse(201, user, "User Profile Retrieved Successfully"));
 
     // const userId = req.userId;
 
@@ -309,8 +323,13 @@ export const getUserProfile = async (req, res) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const userId = req.params;
-    const { username, email } = req.body;
+    // const userId = req.params;
+    // const userId = req.user.id;
+    const userId = req.user.userid;
+
+    const { username, email, phone, address } = req.body;
+
+    console.log("REQ USER:", req.user);
     console.log("USER ID ", userId);
     console.log("USER UserName ", username);
     console.log("USER UserEmail ", email);
@@ -318,8 +337,11 @@ export const updateUserProfile = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
-        email,
         username,
+        email,
+        phone,
+        address,
+        dateOfBirth: req.body.dateOfBirth,
       },
       {
         new: true,
@@ -328,10 +350,7 @@ export const updateUserProfile = async (req, res) => {
     ).select("-password -__v -createdAt");
 
     if (!updatedUser) {
-      return res.status(404).json({
-        message: "User not Found",
-        error: "UserNotFound",
-      });
+      throw new ApiError(404, "User not Found");
     }
 
     res

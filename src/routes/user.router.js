@@ -17,7 +17,7 @@ import { verifyToken } from "../middlewares/verifyToken.middleware.js";
 router.route("/user/register").post(registerUser);
 router.route("/user/login").post(loginUser);
 router.route("/current-user").get(verifyToken, getUserProfile);
-router.route("/update-user-profile/:id").put(verifyToken, updateUserProfile);
+router.route("/update-user-profile").put(verifyToken, updateUserProfile);
 router.route("/user-delete").delete(deleteUserAccount);
 router.route("/user-logout").post(logoutUser);
 router.route("/all-user").get(getAllUsers);

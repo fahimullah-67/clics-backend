@@ -33,6 +33,7 @@ const userSchema = new mongoose.Schema(
     phone: {
       type: String,
     },
+
     status: {
       type: String,
       enum: ["active", "inactive"],
@@ -42,9 +43,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    lastLoginAt: {
+    dateOfBirth: {
       type: Date,
       default: null,
+    },
+    lastLoginAt: {
+      type: Date,
+      default: Date.now,
     },
   },
   { timestamps: true },
