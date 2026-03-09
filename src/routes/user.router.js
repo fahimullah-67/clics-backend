@@ -22,6 +22,6 @@ router.route("/user-delete").delete(deleteUserAccount);
 router.route("/user-logout").post(logoutUser);
 router.route("/all-user").get(getAllUsers);
 router.route("/resetpassword").put(passwordReset);
-router.route("/change_password").put(changePassword);
+router.route("/change_password").put(verifyToken, changePassword);
 
 export  { router as userRouter};

@@ -440,27 +440,32 @@ export const passwordReset = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
+    const userId = req.user.userid;
+
     const { oldPassword, newPassword } = req.body;
-    const userId = req.userId;
+
+    console.log("REQ USER:", req.user, " ", req.user.userid);
+    console.log("USER ID : ", userId);
 
     const user = await User.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
     const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
 
     if (!isPasswordCorrect) {
-      return res.status(404).json({
-        message: "Incorrect Old Password",
-        error: "IncorrectOldPassword",
-      });
+      throw new ApiError(400, "Incorrect Old Password");
     } else {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       user.password = hashedPassword;
 
       await user.save();
-
-      res.status(200).json({
-        message: "Password Changed Successfully",
-        data: { email: user.email },
-      });
+      const data = { email: user.email };
+      res
+        .status(200)
+        .json(new ApiResponse(200, data, "Password Changed Successfully"));
     }
   } catch (error) {
     console.log("Inter Server Error", error);
