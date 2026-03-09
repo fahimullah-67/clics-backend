@@ -6,8 +6,9 @@ import {
   deleteUserAccount,
   logoutUser,
   getAllUsers,
-  passwordReset,
   changePassword,
+  forgotPassword,
+  resetPassword,
 } from "../controllers/user.controller.js";
 
 import express from "express";
@@ -21,7 +22,8 @@ router.route("/update-user-profile").put(verifyToken, updateUserProfile);
 router.route("/user-delete").delete(deleteUserAccount);
 router.route("/user-logout").post(logoutUser);
 router.route("/all-user").get(getAllUsers);
-router.route("/resetpassword").put(passwordReset);
+router.route("/forgot-password").post(forgotPassword);
+router.route("/reset-password/:token").post(resetPassword);
 router.route("/change_password").put(verifyToken, changePassword);
 
-export  { router as userRouter};
+export { router as userRouter };

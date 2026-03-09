@@ -182,7 +182,7 @@ export const loginUser = async (req, res) => {
     }
 
     if (existingUser.isLoggedIn) {
-      throw ApiError(400, "User already logged in");
+      throw new ApiError(400, "User already logged in");
     }
     existingUser.isLoggedIn = true;
     await existingUser.save();
@@ -407,33 +407,103 @@ export const getAllUsers = async (_req, res) => {
   }
 };
 
-export const passwordReset = async (req, res) => {
+import crypto from "crypto";
+import nodemailer from "nodemailer";
+
+export const forgotPassword = async (req, res) => {
   try {
-    const { email, newPassword } = req.body;
-    const user = await User.findOne({
-      email: email,
-    });
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
     if (!user) {
       return res.status(404).json({
-        message: "User with this email does not exists",
-        error: "EmailNotExists",
-      });
-    } else {
-      const hashedPassword = await bcrypt.hash(newPassword, 10);
-      user.password = hashedPassword;
-
-      await user.save();
-
-      res.status(200).json({
-        message: "Password Reset Successfully",
-        data: { email: user.email },
+        message: "User with this email does not exist",
       });
     }
+
+    // create reset token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    // hash token before saving
+    user.resetToken = crypto
+      .createHash("sha256")
+      .update(resetToken)
+      .digest("hex");
+
+    user.resetTokenExpire = Date.now() + 15 * 60 * 1000; // 15 minutes
+
+    await user.save();
+
+    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+
+    // send email
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: user.email,
+      subject: "Password Reset",
+      html: `
+        <h3>Password Reset Request</h3>
+        <p>Click the link below to reset your password:</p>
+        <a href="${resetUrl}">${resetUrl}</a>
+      `,
+    });
+
+    res.status(200).json({
+      message: "Password reset link sent to email",
+    });
   } catch (error) {
-    console.log("Inter Server Error", error);
+    console.log(error);
+
     res.status(500).json({
       message: "Internal Server Error",
-      error: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+    const user = await User.findOne({
+      resetToken: hashedToken,
+      resetTokenExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "Invalid or expired token",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+
+    user.resetToken = undefined;
+    user.resetTokenExpire = undefined;
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Password reset successful",
+    });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Internal Server Error",
     });
   }
 };
@@ -444,8 +514,8 @@ export const changePassword = async (req, res) => {
 
     const { oldPassword, newPassword } = req.body;
 
-    console.log("REQ USER:", req.user, " ", req.user.userid);
-    console.log("USER ID : ", userId);
+    // console.log("REQ USER:", req.user, " ", req.user.userid);
+    // console.log("USER ID : ", userId);
 
     const user = await User.findById(userId);
 
