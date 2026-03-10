@@ -29,11 +29,11 @@ app.get("/", (req, res) => {
 });
 app.use("/api/v1", userRouter);
 app.use("/api/v1", bankRouter);
-app.use("api/v1", loanSchemeRouter);
-app.use("api/v1", chatRouter);
-app.use("api/v1", WatchList);
-app.use("api/v1", snapshotRouter);
-app.use("api/v1", comparisonRouter);
+app.use("/api/v1/loanSchemes", loanSchemeRouter);
+app.use("/api/v1", chatRouter);
+app.use("/api/v1", WatchList);
+app.use("/api/v1", snapshotRouter);
+app.use("/api/v1", comparisonRouter);
 
 
 export {app};
