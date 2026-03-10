@@ -1,3 +1,9 @@
+import { Router } from "express";
+import {
+  verifyTokenAndAdmin,
+  verifyTokenAndAuthorization,
+} from "../middlewares/verifyToken.middleware.js";
+
 import {
   compareLoanSchemes,
   createLoanScheme,
@@ -8,26 +14,18 @@ import {
   recommendLoanScheme,
   updateLoanScheme,
   verifyLoanScheme,
-} from "../controllers/loanScheme.Controller";
-import {
-  verifyToken,
-  verifyTokenAndAdmin,
-} from "../middlewares/verifyToken.middleware";
+} from "../controllers/loanScheme.Controller.js";
 
-// router.route("/user/register").post(registerUser);
+const router = Router();
 
+router.route("/create").post(verifyTokenAndAdmin, createLoanScheme);
+router.route("/getAll").get(getAllLoanSchemes);
+router.route("/getOne").get(getLoanSchemeById);
+router.route("/update").put(verifyTokenAndAuthorization, updateLoanScheme);
 router
-  .route("/loanSchemes/create")
-  .post(verifyToken, verifyTokenAndAdmin, createLoanScheme);
-router.route("/loanSchemes/getAll").get(getAllLoanSchemes);
-router.route("/loanSchemes/getOne/:id").get(getLoanSchemeById);
-router
-  .route("/loanSchemes/update/:id")
-  .put(verifyToken, verifyTokenAndAdmin, updateLoanScheme);
-router
-  .route("/loanSchemes/delete/:id")
-  .delete(verifyToken, verifyTokenAndAdmin, deleteLoanScheme);
-router.route("/loanSchemes/verify").post(verifyLoanScheme);
+  .route("/delete/:id")
+  .delete(verifyTokenAndAuthorization, deleteLoanScheme);
+router.route("/verify").post(verifyLoanScheme);
 router.route("/filter-loan-schemes").get(filterLoanSchemes);
 router.route("/compare-loan-schemes").post(compareLoanSchemes);
 router.route("/recommend-loan-schemes").post(recommendLoanScheme);

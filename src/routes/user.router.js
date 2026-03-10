@@ -20,7 +20,7 @@ router.route("/user/login").post(loginUser);
 router.route("/current-user").get(verifyToken, getUserProfile);
 router.route("/update-user-profile").put(verifyToken, updateUserProfile);
 router.route("/user-delete").delete(deleteUserAccount);
-router.route("/user-logout").post(logoutUser);
+router.route("/user-logout").post(verifyToken, logoutUser);
 router.route("/all-user").get(getAllUsers);
 router.route("/forgot-password").post(forgotPassword);
 router.route("/reset-password/:token").post(resetPassword);

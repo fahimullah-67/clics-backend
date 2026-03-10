@@ -1,36 +1,38 @@
 import mongoose from "mongoose";
 
-const SnapshotSchema = new mongoose.Schema({
-    schemeLoanId:{
-        type: mongoose.Schema.types.ObjectId,
-        ref: "LoanSchemes",
-        required: true,
+const SnapshotSchema = new mongoose.Schema(
+  {
+    schemeLoanId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "LoanSchemes",
+      required: true,
     },
-    sourceType:{
-        type: String,
-        enum: ['webpage' , 'pdf'],
+    sourceType: {
+      type: String,
+      enum: ["webpage", "pdf"],
     },
-    sourceContent:{
-        type: Buffer,
-        required: true,
+    sourceContent: {
+      type: Buffer,
+      required: true,
     },
-    sourceUrl:{
-        type: String,
+    sourceUrl: {
+      type: String,
     },
-    sourceTittle:{
-        type:String,
+    sourceTittle: {
+      type: String,
     },
-    filePath:{
-        type:String,
+    filePath: {
+      type: String,
     },
-    captureDate:{
-        type: Date,
-        default: Date.now,
-    }
-},
-{
-    timeStamps:true,
-})
+    captureDate: {
+      type: Date,
+      default: Date.now,
+    },
+  },
+  {
+    timeStamps: true,
+  },
+);
 
 const Snapshot = mongoose.model("snapshots", SnapshotSchema);
 export default Snapshot;

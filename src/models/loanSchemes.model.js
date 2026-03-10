@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const loanSchemesSchema = new mongoose.Schema(
   {
     bankId: {
-      type: mongoose.schema.types.ObjectID,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Bank",
       required: true,
     },
@@ -19,7 +19,7 @@ const loanSchemesSchema = new mongoose.Schema(
     typeLoan: {
       type: String,
       required: true,
-      enum: ["personal", "home", "student", "education", "business", other],
+      enum: ["personal", "home", "student", "education", "business", "other"],
     },
     interestRate: {
       type: Number,
@@ -104,7 +104,7 @@ const loanSchemesSchema = new mongoose.Schema(
       default: false,
     },
     verifiedBY: {
-      type: mongoose.schema.types.ObjectID,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       default: null,
     },

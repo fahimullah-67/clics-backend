@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { createSnapshot, deleteSnapshot, getSnapshotsByLoanScheme, viewSnapshot } from "../controllers/snapshot.controller";
+
+import {
+  createSnapshot,
+  deleteSnapshot,
+  getSnapshotsByLoanScheme,
+  viewSnapshot,
+} from "../controllers/snapshot.controller.js";
 
 const router = Router();
 
