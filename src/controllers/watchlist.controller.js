@@ -3,27 +3,38 @@
 //     removeFromWatchlist
 //     getUserWatchlist
 import WatchList from "../models/watchList.model.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
+import { ApiError } from "../utils/apiError.js";
+import { ApiResponse } from "../utils/apiResponse.js";
 
 export const addToWatchlist = async (req, res) => {
-    try {
-        const {loanSchemeId} = req.body;
-        const newWatchList = new WatchList(req.body);
-        
-        const existWatchList = await WatchList.findOne({loanSchemeId: loanSchemeId})
+  try {
+    const { loanSchemeId } = req.body;
+    const newWatchList = new WatchList(req.body);
 
-        if(existWatchList){
-            throw new ApiError(401, "This Scheme is already in WatchList!", "SchemeInWatchList");
-        }
+    const existWatchList = await WatchList.findOne({
+      loanSchemeId: loanSchemeId,
+    });
 
-        const watchlistCreated = await newWatchList.save();
+    if (existWatchList) {
+      throw new ApiError(
+        401,
+        "This Scheme is already in WatchList!",
+        "SchemeInWatchList",
+      );
+    }
 
-        res.status(201).json(
-            new ApiError(201, "WatchList Creates successfully!", watchlistCreated)
-        )
+    const watchlistCreated = await newWatchList.save();
 
-    } catch (error) {
+    res
+      .status(201)
+      .json(
+        new ApiResponse(
+          201,
+          "WatchList Creates successfully!",
+          watchlistCreated,
+        ),
+      );
+  } catch (error) {
     console.log("Error add To watchList :", error);
     res.status(500).json({
       message: "Internal Server Error",
@@ -32,18 +43,20 @@ export const addToWatchlist = async (req, res) => {
   }
 };
 
-export const removeFromWatchList = async (req,res) => {
-    try {
-        
-        const removeWatchlist = await findByIdDelete(req.params.id);
-        console.log("Delete Data SuccessFully!");
-        res.json(201).json(
-            new ApiError(201, "WatchList Data Successfully Deletes! ", removeWatchlist)
-           
-        )
-        
-
-    }catch (error) {
+export const removeFromWatchList = async (req, res) => {
+  try {
+    const removeWatchlist = await WatchList.findByIdAndDelete(req.params.id);
+    console.log("Delete Data SuccessFully!");
+    res
+      .status(201)
+      .json(
+        new ApiResponse(
+          201,
+          "WatchList Data Successfully Deletes! ",
+          removeWatchlist,
+        ),
+      );
+  } catch (error) {
     console.log("Error remove WatchList :", error);
     res.status(500).json({
       message: "Internal Server Error",
@@ -52,21 +65,22 @@ export const removeFromWatchList = async (req,res) => {
   }
 };
 
-export const getUserWatchList = async (req, res) => {
-    try {
-        
-        const allWatchlist = await WatchList.find()
+export const getUserWatchList = async (res) => {
+  try {
+    const allWatchlist = await WatchList.find();
 
-        if(allWatchlist.length === 0){
-            return res.status(401).json(
-                new ApiError(401, "User Watch List Not Found!", "UserDataNotFound")
-                )
-        }
+    if (allWatchlist.length === 0) {
+      return res
+        .status(401)
+        .json(
+          new ApiError(401, "User Watch List Not Found!", "UserDataNotFound"),
+        );
+    }
 
-         res.status(201).json(
-            new ApiResponse(201, "All Watch List Data fetch", allWatchlist)
-            );
-    } catch (error) {
+    res
+      .status(201)
+      .json(new ApiResponse(201, "All Watch List Data fetch", allWatchlist));
+  } catch (error) {
     console.log("Error Get User Watchlist:", error);
     res.status(500).json({
       message: "Internal Server Error",
