@@ -1,5 +1,12 @@
 import { Router } from "express";
 import verifyToken, { verifyTokenAndAdmin } from "../middleware/verifyToken.js";
+import {
+  createBank,
+  deleteBank,
+  getAllBankData,
+  getBankById,
+  updateBank,
+} from "../controllers/bank.controller.js";
 
 const router = Router();
 
