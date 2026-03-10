@@ -1,4 +1,6 @@
 import Bank from "../models/bank.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const createBank = async (req, res) => {
   try {
@@ -58,21 +60,15 @@ export const getAllBankData = async (req, res) => {
 
 export const getBankById = async (req, res) => {
   try {
-    const bank = await Bank.findById(req.params.id);
+    const { id } = req.body;
+    const bank = await Bank.findById({ _id: id });
+
     if (!bank) {
-      return res.status(404).json({
-        message: "Bank Not Fount!",
-        error: "bankNOTFound",
-      });
+      throw new ApiError(404, "Bank Not Found!", "bankNOTFound");
     }
 
-    console.log(`Fetch the bank Data: the Id of Bank is: ${bank._id}`);
-    res.status(201).json({
-      message: "Bank data Found",
-      data: {
-        bank,
-      },
-    });
+    // console.log(`Fetch the bank Data: the Id of Bank is: ${bank._id}`);
+    res.status(200).json(new ApiResponse(200, "Bank data Found", { bank }));
   } catch (error) {
     console.log("Error Bank Data:", error);
     res.status(500).json({
@@ -87,11 +83,8 @@ export const updateBank = async (req, res) => {
     const { name } = req.body;
     const bankExist = await Bank.findOne({ name: name });
 
-    if (bankExist) {
-      return res.status(401).json({
-        message: "Bank All ready Exist!",
-        error: "BankExist",
-      });
+    if (!bankExist) {
+      throw new ApiError(404, "Bank Not Exist!", "BankNotExist");
     }
 
     const updateBankData = await Bank.findByIdAndUpdate(
@@ -100,14 +93,11 @@ export const updateBank = async (req, res) => {
       { new: true },
     );
 
-    console.log("Product Updates SuccessFully!");
+    console.log("Bank Updates SuccessFully!");
 
-    res.status(200).json({
-      message: "Update Bank Data",
-      data: {
-        updateBankData,
-      },
-    });
+    res
+      .status(200)
+      .json(new ApiResponse(200, "Bank data Updated", { updateBankData }));
   } catch (error) {
     console.log("Error Update Bank:", error);
     res.status(500).json({
@@ -119,7 +109,7 @@ export const updateBank = async (req, res) => {
 
 export const deleteBank = async (req, res) => {
   try {
-    const bankDelete = await Bank.findByIdDelete(req.params.id);
+    const bankDelete = await Bank.findByIdAndDelete(req.params.id);
     console.log("Delete bank Data SuccessFully!");
     res.status(201).json({
       message: "Delete Bank!",

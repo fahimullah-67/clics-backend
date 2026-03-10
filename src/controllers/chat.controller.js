@@ -3,7 +3,7 @@
 //     getChatHistory
 //     deleteChatHistory
 
-import ChatSession from "../models/chatSessions.model";
+import ChatSession from "../models/chatSessions.model.js";
 import {ApiResponse} from "../utils/apiResponse.js";
 import {ApiError} from "../utils/apiError.js";
 

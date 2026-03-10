@@ -548,13 +548,22 @@ export const changePassword = async (req, res) => {
 
 export const logoutUser = async (_req, res) => {
   try {
+    const userId = _req.user.userid;
+    const user = await User.findById(userId);
+
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    } else {
+      user.isLoggedIn = false;
+      await user.save();
+    }
     res.cookie("jwt", "", {
       httpOnly: true,
       expires: new Date(0),
     });
-    res.status(200).json({
-      message: "User Logged Out SuccessFully",
-    });
+    res
+      .status(200)
+      .json(new ApiResponse(200, null, "User Logged Out SuccessFully"));
   } catch (error) {
     console.log("Inter Server Error", error);
     res.status(500).json({
