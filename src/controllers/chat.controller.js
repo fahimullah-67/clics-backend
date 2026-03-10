@@ -4,6 +4,8 @@
 //     deleteChatHistory
 
 import ChatSession from "../models/chatSessions.model";
+import ApiResponse from "../utils/apiResponse.js";
+import ApiError from "../utils/apiError.js";
 
 export const askQuestion = async (req, res) => {
     try {
