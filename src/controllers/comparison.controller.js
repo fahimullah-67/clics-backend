@@ -29,7 +29,7 @@ export const compareLoanSchemes = async (req, res) => {
 
 export const deleteComparison = async (req, res) => {
   try {
-    const loanBankDelete = findByIdDelete(req.params.id);
+    const loanBankDelete = await LoanScheme.findByIdAndDelete(req.params.id);
     console.log("Bank Delete Successfully");
     res.status(201).json({
       message: "Delete Loan From Compare page!",

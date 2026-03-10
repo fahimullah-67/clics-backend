@@ -3,29 +3,25 @@
 //     removeFromWatchlist
 //     getUserWatchlist
 import WatchList from "../models/watchList.model.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const addToWatchlist = async (req, res) => {
     try {
         const {loanSchemeId} = req.body;
-        const newWatchList = WatchList(req.body);
+        const newWatchList = new WatchList(req.body);
         
         const existWatchList = await WatchList.findOne({loanSchemeId: loanSchemeId})
 
         if(existWatchList){
-            res.status(401).json({
-                message: "This Scheme is already in WatchList!",
-                error: "SchemeInWatchList"
-            })
+            throw new ApiError(401, "This Scheme is already in WatchList!", "SchemeInWatchList");
         }
 
-        const watchlistCreated = WatchList.save();
+        const watchlistCreated = await newWatchList.save();
 
-        res.status(201).json({
-            message: "WatchList Creates successfully!",
-            data:{
-                watchlistCreated,
-            }
-        })
+        res.status(201).json(
+            new ApiError(201, "WatchList Creates successfully!", watchlistCreated)
+        )
 
     } catch (error) {
     console.log("Error add To watchList :", error);
@@ -41,12 +37,10 @@ export const removeFromWatchList = async (req,res) => {
         
         const removeWatchlist = await findByIdDelete(req.params.id);
         console.log("Delete Data SuccessFully!");
-        res.json(201).json({
-            message: "WatchList Data Successfully Deletes! ",
-            data:{
-                removeWatchlist
-            }
-        })
+        res.json(201).json(
+            new ApiError(201, "WatchList Data Successfully Deletes! ", removeWatchlist)
+           
+        )
         
 
     }catch (error) {
@@ -63,19 +57,15 @@ export const getUserWatchList = async (req, res) => {
         
         const allWatchlist = await WatchList.find()
 
-        if(allWatchlist == 0){
-            return res.status(401).json({
-                message: "User Watch List Not Found!",
-                error: "UserDataNotFound"
-            })
+        if(allWatchlist.length === 0){
+            return res.status(401).json(
+                new ApiError(401, "User Watch List Not Found!", "UserDataNotFound")
+                )
         }
 
-         res.status(201).json({
-            message: "All Watch List Data fetch",
-            data: {
-                allWatchlist,
-      },
-    });
+         res.status(201).json(
+            new ApiResponse(201, "All Watch List Data fetch", allWatchlist)
+            );
     } catch (error) {
     console.log("Error Get User Watchlist:", error);
     res.status(500).json({
