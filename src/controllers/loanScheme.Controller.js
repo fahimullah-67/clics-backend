@@ -236,3 +236,46 @@ export const compareLoanSchemes = async (req, res) => {
     });
   }
 };
+
+export const recommendLoanScheme = async (req, res) => {
+  try {
+
+    const { loanType } = req.query;
+
+    const schemes = await LoanSchemes.find({
+      loanType: loanType,
+      isVerified: true
+    });
+
+    if (schemes.length === 0) {
+      return res.status(404).json({
+        message: "No schemes found"
+      });
+    }
+
+    let bestScheme = schemes[0];
+
+    for (let scheme of schemes) {
+
+      if (scheme.interestRate < bestScheme.interestRate) {
+        bestScheme = scheme;
+      }
+
+    }
+
+    res.status(200).json({
+      message: "Best loan scheme recommendation",
+      data: bestScheme
+    });
+
+  } catch (error) {
+
+    console.log("Recommendation error:", error);
+
+    res.status(500).json({
+      message: "Internal Server Error",
+      error: error.message
+    });
+
+  }
+};
