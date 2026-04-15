@@ -8,7 +8,7 @@ import { loanSchemeRouter } from "./src/routes/loanScheme.router.js";
 import { chatRouter } from "./src/routes/chat.router.js";
 import WatchList from "./src/models/watchList.model.js";
 import { snapshotRouter } from "./src/routes/snapshot.router.js";
-import { comparisonRouter } from "./src/routes/comparsion.router.js";
+import { comparisonRouter } from "./src/routes/comparison.router.js";
 
 dotenv.config();
 
@@ -30,10 +30,10 @@ app.get("/", (req, res) => {
 app.use("/api/v1", userRouter);
 app.use("/api/v1", bankRouter);
 app.use("/api/v1/loanSchemes", loanSchemeRouter);
+app.use("/api/v1/schemes", comparisonRouter);
 app.use("/api/v1", chatRouter);
 app.use("/api/v1", WatchList);
 app.use("/api/v1", snapshotRouter);
-app.use("/api/v1", comparisonRouter);
 
 
 export {app};
