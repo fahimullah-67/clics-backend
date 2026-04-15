@@ -1,5 +1,5 @@
 import LoanSchemes from "../models/loanSchemes.model.js";
-import { ApiError } from "../utils/ApiError.js";
+import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 
 export const createLoanScheme = async (req, res) => {
@@ -39,7 +39,7 @@ export const createLoanScheme = async (req, res) => {
 
 export const getAllLoanSchemes = async (req, res) => {
   try {
-    const allLoanScheme = await LoanSchemes.find();
+    const allLoanScheme = await LoanSchemes.find().populate("bankId", "name");
     if (allLoanScheme.length === 0) {
       return res.status(401).json({
         Message: "Scheme not Found",
@@ -58,21 +58,31 @@ export const getAllLoanSchemes = async (req, res) => {
 };
 
 export const getLoanSchemeById = async (req, res) => {
-  const { id } = req.body;
-  const loanScheme = await LoanSchemes.findById({ _id: id });
-  // const loanScheme = await LoanSchemes.findById(req.params.id);
-  if (!loanScheme) {
-    res.status(401).json({
-      message: " Loan Scheme not Exist!",
-      error: "NotExist",
-    });
+  try {
+    const { id } = req.query;
+    console.log(" Request From : ", id);
+
+    const loanScheme = await LoanSchemes.findById({ _id: id }).populate(
+      "bankId",
+      "name",
+    );
+    // const loanScheme = await LoanSchemes.findById(req.params.id);
+    if (!loanScheme) {
+      return res
+        .status(401)
+        .json(new ApiError(401, "Scheme not Found!", "SchemeNotFound"));
+    }
+    res
+      .status(201)
+      .json(
+        new ApiResponse(201, loanScheme, "Scheme data fetch Successfully!"),
+      );
+  } catch (error) {
+    console.log(" Internal Server Error:", error);
+    res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error", error.message));
   }
-  res.status(201).json({
-    message: " Loan Scheme fetch! ",
-    data: {
-      loanScheme,
-    },
-  });
 };
 
 export const updateLoanScheme = async (req, res) => {
