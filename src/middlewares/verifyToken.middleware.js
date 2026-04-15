@@ -4,6 +4,7 @@ import { ApiError } from "../utils/ApiError.js";
 
 const verifyToken = async (req, res, next) => {
   try {
+    console.log("Verifying token for incoming request...");
     const token = req.cookies?.jwt;
 
     if (!token) {
