@@ -1,20 +1,23 @@
 import mongoose from "mongoose";
 
-const comparisonsSchema = new mongoose.schema({
-    userId:{
-        type: mongoose.schema.Types.ObjectID,
-        ref: "User",
-        required: true,
+const comparisonSchema = new mongoose.Schema(
+  {
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    loanSchemeId:{
-        type: mongoose.schema.Types.ObjectID,
-        ref: "LoanSchemes",
-        required: true,
-    }
-    
-},{
+    schemeIds: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "LoanScheme",
+      },
+    ],
+  },
+  {
     timestamps: true,
-})
+  },
+);
 
-const Comparison = mongoose.model("Comparison", comparisonsSchema);
+const Comparison = mongoose.model("Comparison", comparisonSchema);
 export default Comparison;
