@@ -383,24 +383,19 @@ export const deleteUserAccount = async (req, res) => {
 
 export const getAllUsers = async (_req, res) => {
   try {
-    const users = await User.find().select(
-      "- password -__v -createdAt -updatedAt",
-    );
+    const users = await User.find()
+      .select(["-password", "-__v", "-createdAt", "-updatedAt"])
+      .sort({ createdAt: -1 })
+      .lean();
 
-    if (users.length === 0) {
-      return res.status(404).json({
-        message: "No Users Found",
-        error: "NoUsersFound",
-      });
-    } else {
-      res.status(200).json({
-        message: "Users Retrieved Successfully",
-        data: users,
-      });
-    }
+    return res.status(200).json({
+      message: "Users Retrieved Successfully",
+      data: users,
+    });
   } catch (error) {
-    console.log("Inter Server Error", error);
-    res.status(500).json({
+    console.log("Internal Server Error:", error);
+
+    return res.status(500).json({
       message: "Internal Server Error",
       error: error.message,
     });
