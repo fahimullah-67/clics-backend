@@ -88,12 +88,12 @@ export const updateBank = async (req, res) => {
     }
 
     const updateBankData = await Bank.findByIdAndUpdate(
-      req.params.id,
+      req.body.id,
       { $set: req.body },
       { new: true },
     );
 
-    console.log("Bank Updates SuccessFully!");
+    console.log("Bank Updates SuccessFully!", "ID :", req.body.id, req.body);
 
     res
       .status(200)
