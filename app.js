@@ -31,7 +31,7 @@ app.use("/api/v1", userRouter);
 app.use("/api/v1", bankRouter);
 app.use("/api/v1/loanSchemes", loanSchemeRouter);
 app.use("/api/v1/schemes", comparisonRouter);
-app.use("/api/v1", watchlistRouter);
+app.use("/api/v1/watchlist", watchlistRouter);
 app.use("/api/v1", chatRouter);
 app.use("/api/v1", snapshotRouter);
 
