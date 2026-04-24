@@ -3,12 +3,13 @@ import {
   addToWatchlist,
   getUserWatchList,
   removeFromWatchList,
-} from "../controllers/watchlist.controller";
+} from "../controllers/watchlist.controller.js";
+import { verifyToken } from "../middlewares/verifyToken.middleware.js";
 
 const router = Router();
 
-router.route("/addWatchlist").post(addToWatchlist);
-router.route("/removeWatchlist").delete(removeFromWatchList);
-router.route("/getWatchlist").get(getUserWatchList);
+router.route("/addWatchlist").post(verifyToken, addToWatchlist);
+router.route("/removeWatchlist").delete(verifyToken, removeFromWatchList);
+router.route("/getWatchlist").get(verifyToken, getUserWatchList);
 
 export { router as watchlistRouter };
