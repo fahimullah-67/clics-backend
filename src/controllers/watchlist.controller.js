@@ -19,15 +19,19 @@ export const addToWatchlist = async (req, res) => {
 
     const existWatchList = await WatchList.findOne({
       loanSchemeId: loanSchemeId,
-      userId: userId,
+      userid: userId,
     });
 
     if (existWatchList) {
-      throw new ApiError(
-        401,
-        "This Scheme is already in WatchList!",
-        "SchemeInWatchList",
-      );
+      return res
+        .status(401)
+        .json(
+          new ApiError(
+            401,
+            "SchemeInWatchList",
+            "This Scheme is already in WatchList!",
+          ),
+        );
     }
 
     const watchlistCreated = await newWatchList.save();
@@ -58,16 +62,15 @@ export const removeFromWatchList = async (req, res) => {
       .json(
         new ApiResponse(
           201,
-          "WatchList Data Successfully Deletes! ",
           removeWatchlist,
+          "WatchList Data Successfully Deletes! ",
         ),
       );
   } catch (error) {
     console.log("Error remove WatchList :", error);
-    res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error", error.message));
   }
 };
 
@@ -80,7 +83,7 @@ export const getUserWatchList = async (req, res) => {
       return res
         .status(401)
         .json(
-          new ApiError(401, "User Watch List Not Found!", "UserDataNotFound"),
+          new ApiError(401, "UserDataNotFound", "User Watch List Not Found!"),
         );
     }
 
