@@ -13,21 +13,17 @@ export const createLoanScheme = async (req, res) => {
     if (existScheme) {
       console.log(`Scheme already exists. Code: ${schemeCode}`);
 
-      return res.status(401).json({
-        message: "Scheme All Ready Exist!",
-        error: "SchemeExist",
-      });
+      return res
+        .status(401)
+        .json(new ApiError(401, "SchemeExist", "Scheme already exists!"));
     }
 
     const createdLoanScheme = await loanScheme.save();
 
     console.log("Loan Scheme is Created SuccessFully!");
-    res.status(201).json({
-      message: "Loan Scheme is Created",
-      data: {
-        createdLoanScheme,
-      },
-    });
+    res
+      .status(201)
+      .json(new ApiResponse(201, createdLoanScheme, "Loan Scheme is Created"));
   } catch (error) {
     console.log("Error Creating Loan Scheme:", error);
     res.status(500).json({
