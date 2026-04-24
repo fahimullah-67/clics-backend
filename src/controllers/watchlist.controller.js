@@ -8,11 +8,18 @@ import { ApiResponse } from "../utils/apiResponse.js";
 
 export const addToWatchlist = async (req, res) => {
   try {
+    const userId = req.user.userid;
+    console.log("User id; ", userId);
+
     const { loanSchemeId } = req.body;
-    const newWatchList = new WatchList(req.body);
+    const newWatchList = new WatchList({
+      loanSchemeId,
+      userid: userId,
+    });
 
     const existWatchList = await WatchList.findOne({
       loanSchemeId: loanSchemeId,
+      userId: userId,
     });
 
     if (existWatchList) {
@@ -30,16 +37,15 @@ export const addToWatchlist = async (req, res) => {
       .json(
         new ApiResponse(
           201,
-          "WatchList Creates successfully!",
           watchlistCreated,
+          "WatchList Creates successfully!",
         ),
       );
   } catch (error) {
     console.log("Error add To watchList :", error);
-    res.status(500).json({
-      message: "Internal Server Error",
-      error: error.message,
-    });
+    res
+      .status(500)
+      .json(new ApiError(500, "Internal Server Error", error.message));
   }
 };
 
@@ -65,9 +71,10 @@ export const removeFromWatchList = async (req, res) => {
   }
 };
 
-export const getUserWatchList = async (res) => {
+export const getUserWatchList = async (req, res) => {
   try {
-    const allWatchlist = await WatchList.find();
+    const userId = req.user.userid;
+    const allWatchlist = await WatchList.find({ userid: userId });
 
     if (allWatchlist.length === 0) {
       return res
