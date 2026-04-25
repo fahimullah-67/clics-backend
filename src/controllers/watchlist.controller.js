@@ -77,9 +77,17 @@ export const removeFromWatchList = async (req, res) => {
 export const getUserWatchList = async (req, res) => {
   try {
     const userId = req.user.userid;
-    const allWatchlist = await WatchList.find({ userid: userId });
+    const allWatchlist = await WatchList.find({ userid: userId })
+      .populate({
+        path: "loanSchemeId",
+        populate: {
+          path: "bankId",
+          select: "name",
+        },
+      })
+      .exec();
 
-    if (allWatchlist.length === 0) {
+    if (allWatchlist?.length === 0) {
       return res
         .status(401)
         .json(
@@ -89,7 +97,7 @@ export const getUserWatchList = async (req, res) => {
 
     res
       .status(201)
-      .json(new ApiResponse(201, "All Watch List Data fetch", allWatchlist));
+      .json(new ApiResponse(201, allWatchlist, "All Watch List Data fetch"));
   } catch (error) {
     console.log("Error Get User Watchlist:", error);
     res.status(500).json({
