@@ -9,7 +9,7 @@ import { verifyToken } from "../middlewares/verifyToken.middleware.js";
 const router = Router();
 
 router.route("/addWatchlist").post(verifyToken, addToWatchlist);
-router.route("/removeWatchlist").delete(verifyToken, removeFromWatchList);
+router.route("/removeWatchlist/:id").delete(verifyToken, removeFromWatchList);
 router.route("/getWatchlist").get(verifyToken, getUserWatchList);
 
 export { router as watchlistRouter };
