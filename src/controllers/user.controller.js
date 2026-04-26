@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { ApiError } from "../utils/apiError.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { createNotificationService } from "../services/notification.service.js";
+import { NOTIFICATION_TYPES } from "../constants/notifications.js";
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET; //|| "$#5fahim@1234";
@@ -55,9 +57,34 @@ export const registerUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    const userId = newUser._id;
+    const userEmail = newUser.email;
+    const userName = newUser.username;
+
+    // Send Welcome Notification via Email and In-App
+    try {
+      await createNotificationService({
+        userId: userId,
+        email: userEmail,
+        type: NOTIFICATION_TYPES.WELCOME,
+        data: {
+          userName: userName,
+        },
+        sentVia: ["EMAIL", "IN_APP"],
+        priority: "high",
+        actionLink: "/dashboard",
+        actionText: "Go to Dashboard",
+        userName: userName,
+      });
+    } catch (notifError) {
+      console.error("Error creating welcome notification:", notifError.message);
+      // Don't fail the signup if notification fails
+    }
+
+    // Also send email directly for backward compatibility
     await sendEmail(
       newUser.email,
-      "Welcome to CLICS 🎉",
+      "Welcome to CLICS System! ",
       `
   <div style="margin:0; padding:0; background-color:#f4f6f8; font-family: Arial, sans-serif;">
     <table width="100%" style="border-collapse:collapse; padding:30px 0;">
@@ -209,6 +236,27 @@ export const loginUser = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
+    // Send Login Alert Notification
+    try {
+      await createNotificationService({
+        userId: existingUser._id,
+        email: existingUser.email,
+        type: NOTIFICATION_TYPES.LOGIN_ALERT,
+        data: {
+          device: req.headers["user-agent"] || "Unknown Device",
+        },
+        sentVia: ["EMAIL", "IN_APP"],
+        priority: "high",
+        actionLink: "/settings/security",
+        actionText: "Review Security",
+        userName: existingUser.username,
+      });
+    } catch (notifError) {
+      console.error("Error creating login notification:", notifError.message);
+      // Don't fail the login if notification fails
+    }
+
+    // Also send email directly for backward compatibility
     await sendEmail(
       existingUser.email,
       "Login Alert 🚨",
@@ -353,6 +401,9 @@ export const updateUserProfile = async (req, res) => {
       throw new ApiError(404, "User not Found");
     }
 
+    
+
+
     res
       .status(200)
       .json(
@@ -451,6 +502,29 @@ export const forgotPassword = async (req, res) => {
         <a href="${resetUrl}">${resetUrl}</a>
       `,
     });
+
+    // Send password reset notification
+    try {
+      await createNotificationService({
+        userId: user._id,
+        email: user.email,
+        type: "PASSWORD_RESET",
+        data: {
+          resetUrl: resetUrl,
+        },
+        sentVia: ["EMAIL"],
+        priority: "high",
+        actionLink: resetUrl,
+        actionText: "Reset Password",
+        userName: user.username,
+      });
+    } catch (notifError) {
+      console.error(
+        "Error creating password reset notification:",
+        notifError.message
+      );
+      // Continue even if notification fails
+    }
 
     res.status(200).json({
       message: "Password reset link sent to email",
