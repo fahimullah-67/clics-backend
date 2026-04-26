@@ -9,10 +9,18 @@ import { chatRouter } from "./src/routes/chat.router.js";
 import { snapshotRouter } from "./src/routes/snapshot.router.js";
 import { comparisonRouter } from "./src/routes/comparison.router.js";
 import { watchlistRouter } from "./src/routes/watchlist.router.js";
+import { notificationRouter } from "./src/routes/notification.router.js";
+
+// import { createServer } from "http";
+// import notificationService from "./src/utils/realTimeNotificationService.js";
 
 dotenv.config();
 
 const app = express();
+// const httpServer = createServer(app);
+
+// Initialize Socket.io for real-time notifications
+// notificationService.initialize(httpServer);
 
 app.use(
   cors({
@@ -32,8 +40,13 @@ app.use("/api/v1", bankRouter);
 app.use("/api/v1/loanSchemes", loanSchemeRouter);
 app.use("/api/v1/schemes", comparisonRouter);
 app.use("/api/v1/watchlist", watchlistRouter);
+app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1", chatRouter);
 app.use("/api/v1", snapshotRouter);
 
+
+// httpServer.listen(process.env.PORT || 5000, () => {
+//   console.log(`Server running on port ${process.env.PORT || 5000}`);  
+// });
 
 export {app};
