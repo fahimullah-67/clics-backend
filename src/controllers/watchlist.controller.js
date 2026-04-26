@@ -5,6 +5,9 @@
 import WatchList from "../models/watchList.model.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
+import e from "express";
+import createNotificationService from "../services/notification.service.js";
+import { NOTIFICATION_TYPES } from "../constants/notifications.js";
 
 export const addToWatchlist = async (req, res) => {
   try {
@@ -35,6 +38,24 @@ export const addToWatchlist = async (req, res) => {
     }
 
     const watchlistCreated = await newWatchList.save();
+
+    try {
+      await createNotificationService({
+        userId,
+        email: req.user.email,
+        type: NOTIFICATION_TYPES.INFO,
+        data: {
+          message: `You have added a new scheme to your watchlist: ${loanSchemeId}`,
+        },
+        sentVia: ["EMAIL", "IN_APP"],
+        priority: "low",
+        actionUrl: `/loan-schemes/${loanSchemeId}`,
+        actionText: "View Scheme",
+        userName: req.user.name || "User",
+      });
+    } catch (error) {
+      console.error("Error creating notification:", error);
+    }
 
     res
       .status(201)
