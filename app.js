@@ -10,6 +10,8 @@ import { snapshotRouter } from "./src/routes/snapshot.router.js";
 import { comparisonRouter } from "./src/routes/comparison.router.js";
 import { watchlistRouter } from "./src/routes/watchlist.router.js";
 import { notificationRouter } from "./src/routes/notification.router.js";
+import { adminRouter } from "./src/routes/admin.route.js";
+import { adminLogsRouter } from "./src/routes/adminLogs.route.js";
 
 // import { createServer } from "http";
 // import notificationService from "./src/utils/realTimeNotificationService.js";
@@ -41,6 +43,8 @@ app.use("/api/v1/loanSchemes", loanSchemeRouter);
 app.use("/api/v1/schemes", comparisonRouter);
 app.use("/api/v1/watchlist", watchlistRouter);
 app.use("/api/v1/notifications", notificationRouter);
+app.use("/api/v1/admin", adminRouter);
+app.use("/api/v1/adminLogs", adminLogsRouter);
 app.use("/api/v1", chatRouter);
 app.use("/api/v1", snapshotRouter);
 
