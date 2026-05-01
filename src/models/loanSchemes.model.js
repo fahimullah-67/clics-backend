@@ -19,7 +19,15 @@ const loanSchemesSchema = new mongoose.Schema(
     typeLoan: {
       type: String,
       required: true,
-      enum: ["personal", "home", "student", "education", "business", "other"],
+      enum: [
+        "personal",
+        "home",
+        "student",
+        "education",
+        "Agriculture",
+        "business",
+        "other",
+      ],
     },
     interestRate: {
       type: Number,
