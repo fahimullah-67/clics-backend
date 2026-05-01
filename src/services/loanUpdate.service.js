@@ -1,5 +1,5 @@
 import LoanSchemes from "../models/loanSchemes.model.js";
-import Watchlist from "../models/watchlist.model.js";
+import WatchList from "../models/watchList.model.js";
 import Notification from "../models/notification.model.js";
 import { generateNotificationContent } from "../utils/notificationHelper.js";
 import { sendEmail } from "../utils/sendMailer.js";
