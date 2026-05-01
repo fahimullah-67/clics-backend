@@ -1,5 +1,5 @@
 import LoanSchemes from "../models/loanSchemes.model.js";
-import Watchlist from "../models/watchlist.model.js";
+import WatchList from "../models/watchList.model.js";
 import Notification from "../models/notification.model.js";
 import { generateNotificationContent } from "../utils/notificationHelper.js";
 import { sendEmail } from "../utils/sendMailer.js";
@@ -13,18 +13,19 @@ export const handleLoanSchemeUpdate = async (schemeId, newData) => {
 
     const changes = detectChanges(existingScheme, newData);
 
-    // ❌ No change → do nothing
+    //  No change → do nothing
     if (changes.length === 0) return;
 
-    // ✅ Update DB
+    //  Update DB
     await LoanSchemes.findByIdAndUpdate(schemeId, {
       $set: newData,
       lastUpdatedAt: new Date(),
     });
 
-    // 👇 Find users who saved this scheme
-    const watchers = await Watchlist.find({ loanSchemeId: schemeId })
-      .populate("userId");
+    //  Find users who saved this scheme
+    const watchers = await Watchlist.find({ loanSchemeId: schemeId }).populate(
+      "userId",
+    );
 
     for (let watch of watchers) {
       const user = watch.userId;
@@ -56,7 +57,6 @@ export const handleLoanSchemeUpdate = async (schemeId, newData) => {
     }
 
     console.log("Notifications sent to watchers");
-
   } catch (error) {
     console.log("Error in auto notification trigger:", error);
   }
