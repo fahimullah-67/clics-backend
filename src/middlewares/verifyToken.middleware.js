@@ -8,7 +8,10 @@ const verifyToken = async (req, res, next) => {
     const token = req.cookies?.jwt;
 
     if (!token) {
-      throw new ApiError(401, "Please login first");
+      return res.status(401).json({
+        success: false,
+        message: "Please login first",
+      });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -17,7 +20,10 @@ const verifyToken = async (req, res, next) => {
 
     next();
   } catch (error) {
-    throw new ApiError(401, "Invalid or expired token");
+    return res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
   }
 };
 
