@@ -1,0 +1,98 @@
+[
+  {
+    "name": "Meezan Bank Limited",
+    "bankCode": "MEBL",
+    "webUrl": "https://www.meezanbank.com",
+    "contactEmail": "info@meezanbank.com",
+    "contactPhone": "+92-21-111-331-331",
+    "logoURL": "https://www.meezanbank.com/wp-content/themes/mbl/images/logo.png"
+  },
+  {
+    "name": "Bank Alfalah Limited",
+    "bankCode": "BAFL",
+    "webUrl": "https://www.bankalfalah.com",
+    "contactEmail": "info@bankalfalah.com",
+    "contactPhone": "+92-21-111-225-111",
+    "logoURL": "https://www.bankalfalah.com/images/logo.png"
+  },
+  {
+    "name": "National Bank of Pakistan",
+    "bankCode": "NBP",
+    "webUrl": "https://www.nbp.com.pk",
+    "contactEmail": "support@nbp.com.pk",
+    "contactPhone": "+92-21-111-627-627",
+    "logoURL": "https://www.nbp.com.pk/images/logo.png"
+  },
+  {
+    "name": "MCB Bank Limited",
+    "bankCode": "MCB",
+    "webUrl": "https://www.mcb.com.pk",
+    "contactEmail": "mcb@mcb.com.pk",
+    "contactPhone": "+92-42-111-000-622",
+    "logoURL": "https://www.mcb.com.pk/assets/images/logo.png"
+  },
+  {
+    "name": "The Bank of Punjab",
+    "bankCode": "BOP",
+    "webUrl": "https://www.bop.com.pk",
+    "contactEmail": "info@bop.com.pk",
+    "contactPhone": "+92-42-111-267-200",
+    "logoURL": "https://www.bop.com.pk/images/logo.png"
+  },
+  {
+    "name": "Allied Bank Limited",
+    "bankCode": "ABL",
+    "webUrl": "https://www.abl.com",
+    "contactEmail": "info@abl.com",
+    "contactPhone": "+92-42-111-225-225",
+    "logoURL": "https://www.abl.com/images/logo.png"
+  },
+  {
+    "name": "Askari Bank Limited",
+    "bankCode": "AKBL",
+    "webUrl": "https://www.askaribank.com",
+    "contactEmail": "info@askaribank.com",
+    "contactPhone": "+92-51-111-000-787",
+    "logoURL": "https://www.askaribank.com/images/logo.png"
+  },
+  {
+    "name": "Faysal Bank Limited",
+    "bankCode": "FABL",
+    "webUrl": "https://www.faysalbank.com",
+    "contactEmail": "info@faysalbank.com",
+    "contactPhone": "+92-21-111-060-606",
+    "logoURL": "https://www.faysalbank.com/images/logo.png"
+  },
+  {
+    "name": "Habib Bank Limited",
+    "bankCode": "HBL",
+    "webUrl": "https://www.hbl.com",
+    "contactEmail": "info@hbl.com",
+    "contactPhone": "+92-21-111-111-425",
+    "logoURL": "https://www.hbl.com/assets/images/logo.png"
+  },
+  {
+    "name": "United Bank Limited",
+    "bankCode": "UBL",
+    "webUrl": "https://www.ubldigital.com",
+    "contactEmail": "customer.care@ubl.com.pk",
+    "contactPhone": "+92-21-111-825-888",
+    "logoURL": "https://www.ubldigital.com/images/logo.png"
+  },
+  {
+    "name": "Soneri Bank Limited",
+    "bankCode": "SNBL",
+    "webUrl": "https://www.soneribank.com",
+    "contactEmail": "info@soneribank.com",
+    "contactPhone": "+92-21-111-567-890",
+    "logoURL": "https://www.soneribank.com/images/logo.png"
+  },
+  {
+    "name": "Bank AL Habib Limited",
+    "bankCode": "BAHL",
+    "webUrl": "https://www.bankalhabib.com",
+    "contactEmail": "info@bankalhabib.com",
+    "contactPhone": "+92-21-111-014-014",
+    "logoURL": "https://www.bankalhabib.com/images/logo.png"
+  }
+]
