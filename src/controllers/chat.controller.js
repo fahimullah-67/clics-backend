@@ -8,19 +8,56 @@ import {ApiResponse} from "../utils/apiResponse.js";
 import {ApiError} from "../utils/apiError.js";
 
 export const askQuestion = async (req, res) => {
-    try {
-        
-        const newMessage = new ChatSession(req.body);
+  try {
+    const { question, answer, chatId } = req.body;
+    const userId = req.user.userid;
 
-        const createMessage = await newMessage.save();
+    if (chatId) {
+      // 1. Find existing chat session
+      const chat = await ChatSession.findById(chatId);
 
-        res.status(201).json(
-          new ApiResponse(201, "User Ask Question", createMessage)
-          );
+      // 2. Validate ownership
+      if (!chat || chat.userid.toString() !== userId.toString()) {
+        return res.status(404).json({ error: "Chat not found" });
+      }
 
-    } catch (error) {
-    console.log("Error User Ask question :", error);
-    res.status(500).json({
+      // 3. Append new messages to the existing chat document
+      chat.messages.push(
+        { role: "user", text: question },
+        { role: "bot", text: answer },
+      );
+
+      // 4. Update the timestamp
+      chat.updatedAt = new Date();
+
+      // 5. Save the updated document
+      await chat.save();
+
+      // 6. Return success response with the same chatId
+      return res
+        .status(201)
+        .json(new ApiResponse(201, chatId, "Chat updated, new messages added"));
+    } else {
+      // Create a brand new chat session
+      const newChat = new ChatSession({
+        userid: userId,
+        messages: [
+          { role: "user", text: question },
+          { role: "bot", text: answer },
+        ],
+        language: "en",
+      });
+
+      await newChat.save();
+      const newChatId = newChat._id;
+
+      return res
+        .status(201)
+        .json(new ApiResponse(201, newChatId, "New chat created"));
+    }
+  } catch (error) {
+    console.error("Chat/Question/Answer error:", error);
+    return res.status(500).json({
       message: "Internal Server Error",
       error: error.message,
     });
@@ -28,18 +65,21 @@ export const askQuestion = async (req, res) => {
 };
 
 export const getChatHistory = async (req, res) => {
-    try {
-        const userChatHistory = await ChatSession.find();
+  try {
+    const chats = await ChatSession.find().sort({ createdAt: -1 });
 
-        if ( !userChatHistory){
-            throw new ApiError(401, "User Chat History Not Found!", "UserChatHistoryNotFound");
-        }
+    if (!chats) {
+      throw new ApiError(
+        401,
+        "User Chat History Not Found!",
+        "UserChatHistoryNotFound",
+      );
+    }
 
-        res.status(201).json(
-          new ApiResponse(201, "User Chat Data Fetch SuccessFully", userChatHistory)
-          );
-
-    } catch (error) {
+    res
+      .status(201)
+      .json(new ApiResponse(201, chats, "User Chat Data Fetch SuccessFully"));
+  } catch (error) {
     console.log("Error fetch All chat History!  :", error);
     res.status(500).json({
       message: "Internal Server Error",
@@ -49,14 +89,11 @@ export const getChatHistory = async (req, res) => {
 };
 
 export const deleteChatHistory = async (req, res) => {
-    try {
-        
-        const chatDelete = await findByIdDelete(req.params.id);
-        res.status(201).json(
-          new ApiResponse(201, "Delete chat history!", chatDelete)
-          );
+  try {
+    await ChatSession.findByIdAndDelete(req.params.id);
 
-    } catch (error) {
+    res.status(201).json(new ApiResponse(201, "", "Delete chat history!"));
+  } catch (error) {
     console.log("Error Delete Chat History :", error);
     res.status(500).json({
       message: "Internal Server Error",
