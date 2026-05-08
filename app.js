@@ -12,6 +12,7 @@ import { watchlistRouter } from "./src/routes/watchlist.router.js";
 import { notificationRouter } from "./src/routes/notification.router.js";
 import { adminRouter } from "./src/routes/admin.route.js";
 import { adminLogsRouter } from "./src/routes/adminLogs.route.js";
+import { scraperRouter } from "./src/routes/scraper.router.js";
 
 // import { createServer } from "http";
 // import notificationService from "./src/utils/realTimeNotificationService.js";
@@ -45,7 +46,8 @@ app.use("/api/v1/watchlist", watchlistRouter);
 app.use("/api/v1/notifications", notificationRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/adminLogs", adminLogsRouter);
-app.use("/api/v1", chatRouter);
+app.use("/api/v1/scraper", scraperRouter);
+app.use("/api/v1/chat", chatRouter);
 app.use("/api/v1", snapshotRouter);
 
 

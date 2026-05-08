@@ -1,16 +1,14 @@
-
 import Router from "express";
-
-const router = Router();
-
-
 import {
   deleteChatHistory,
   askQuestion,
   getChatHistory,
 } from "../controllers/chat.controller.js";
+import { verifyToken } from "../middlewares/verifyToken.middleware.js";
 
-router.route("/ask").post(askQuestion);
+const router = Router();
+
+router.route("/ask").post(verifyToken, askQuestion);
 router.route("/").get(getChatHistory);
 router.route("/deleteChat").delete(deleteChatHistory);
 

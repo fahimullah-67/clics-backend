@@ -5,6 +5,11 @@ const bankSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  normalizedName: {
+    type: String,
+    required: true,
+    index: true,
+  },
   bankCode: {
     type: String,
     required: true,

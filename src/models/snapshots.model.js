@@ -2,40 +2,34 @@ import mongoose from "mongoose";
 
 const SnapshotSchema = new mongoose.Schema(
   {
-    schemeLoanId: {
+    loanSchemeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "LoanSchemes",
       required: true,
     },
+
     sourceType: {
       type: String,
-      enum: ["webpage", "pdf"],
+      enum: ["webpage", "pdf", "api"],
+      default: "webpage",
     },
-    sourceContent: {
-      type: Buffer,
-      required: true,
-    },
-    sourceUrl: {
-      type: String,
-    },
-    sourceTittle: {
-      type: String,
-    },
-    filePath: {
-      type: String,
-    },
+
+    sourceUrl: String,
+    sourceTitle: String,
+
+    filePath: String, // for pdf/image
+
+    rawData: mongoose.Schema.Types.Mixed, // store scraped JSON
+
     captureDate: {
       type: Date,
       default: Date.now,
     },
   },
-  {
-    timeStamps: true,
-  },
+  { timestamps: true },
 );
 
-const Snapshot = mongoose.model("snapshots", SnapshotSchema);
-export default Snapshot;
+export default mongoose.model("Snapshot", SnapshotSchema);
 
 // Snapshot stores the original bank web page or PDF with capture date 
 // so loan data can be verified, audited, and used as evidence 

@@ -7,35 +7,24 @@ const chatSessionsSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    questions: {
-      type: [String],
-      required: true,
-    },
-    answers: {
-      type: [String],
-      required: true,
-    },
+
+    messages: [
+      {
+        role: {
+          type: String,
+          enum: ["user", "bot"],
+        },
+        text: String,
+      },
+    ],
+
     language: {
-      type: [String],
-      required: true,
-      enum: ["en", "ur", "fr", "de", "zh"],
+      type: String,
+      enum: ["en", "ur"],
       default: "en",
     },
-    sourceSnapshotIds: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "SourceSnapshots",
-      required: true,
-    },
-    confidenceScores: {
-      type: [Number],
-      required: true,
-    },
   },
-  {
-    timestamps: true,
-  },
+  { timestamps: true },
 );
 
-const ChatSession = mongoose.model("ChatSession", chatSessionsSchema);
-export default ChatSession;
-
+export default mongoose.model("ChatSession", chatSessionsSchema);

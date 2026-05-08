@@ -1,3 +1,4 @@
+import User from "./user.model.js";
 import LoanSchemes from "./loanSchemes.model.js";
 import Bank from "./bank.model.js";
 import WatchList from "./watchList.model.js";
@@ -8,6 +9,7 @@ import Snapshot from "./snapshots.model.js";
 import ScraperLog from "./scraperLogs.model.js";
 import VectorIndex from "./vectorIndexes.model.js";
 import ChatSession from "./chatSessions.model.js";
+import AdminLog from "./admin/adminLogs.model.js";
 
 const Models = {
   User,
@@ -21,5 +23,6 @@ const Models = {
   Snapshot,
   ScraperLog,
   VectorIndex,
+  AdminLog,
 };
 export default Models;
