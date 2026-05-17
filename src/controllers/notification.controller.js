@@ -1,6 +1,6 @@
 import Notification from "../models/notifications.model.js";
-import { ApiError } from "../utils/apiError.js";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import { generateNotificationContent, getUIType, getCategory } from "../utils/notificationHelper.js";
 import { generateEmailHTML } from "../utils/notificationHTMLGenerator.js";
 import { sendEmail } from "../utils/sendEmail.js";

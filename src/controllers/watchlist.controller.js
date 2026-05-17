@@ -3,8 +3,8 @@
 //     removeFromWatchlist
 //     getUserWatchlist
 import WatchList from "../models/watchList.model.js";
-import { ApiError } from "../utils/apiError.js";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 import e from "express";
 import createNotificationService from "../services/notification.service.js";
 import { NOTIFICATION_TYPES } from "../constants/notifications.js";

@@ -1,6 +1,6 @@
 import LoanSchemes from "../models/loanSchemes.model.js";
-import { ApiError } from "../utils/apiError.js";
-import { ApiResponse } from "../utils/apiResponse.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 export const createLoanScheme = async (req, res) => {
   try {
