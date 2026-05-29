@@ -13,32 +13,25 @@ export const askQuestion = async (req, res) => {
     const userId = req.user.userid;
 
     if (chatId) {
-      // 1. Find existing chat session
       const chat = await ChatSession.findById(chatId);
 
-      // 2. Validate ownership
       if (!chat || chat.userid.toString() !== userId.toString()) {
         return res.status(404).json({ error: "Chat not found" });
       }
 
-      // 3. Append new messages to the existing chat document
       chat.messages.push(
         { role: "user", text: question },
         { role: "bot", text: answer },
       );
 
-      // 4. Update the timestamp
       chat.updatedAt = new Date();
 
-      // 5. Save the updated document
       await chat.save();
 
-      // 6. Return success response with the same chatId
       return res
         .status(201)
         .json(new ApiResponse(201, chatId, "Chat updated, new messages added"));
     } else {
-      // Create a brand new chat session
       const newChat = new ChatSession({
         userid: userId,
         messages: [
@@ -66,7 +59,10 @@ export const askQuestion = async (req, res) => {
 
 export const getChatHistory = async (req, res) => {
   try {
-    const chats = await ChatSession.find().sort({ createdAt: -1 });
+    const userid = req.user.userid;
+    const chats = await ChatSession.find({ userid: userid }).sort({
+      createdAt: -1,
+    });
 
     if (!chats) {
       throw new ApiError(
