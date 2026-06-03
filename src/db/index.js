@@ -6,8 +6,14 @@ const port = process.env.PORT || 8000;
 // const port = process.env.PORT || 8000;
 // console.log("For Testing:   PORT Running On ", port);
 
+let isConnected = false;
+
 const connectDB = async () => {
   try {
+    if (isConnected) {
+      return;
+    }
+
     //DATABASE Mongoose Connection
     // mongoose
     //   .connect(
@@ -19,6 +25,9 @@ const connectDB = async () => {
     const connectInstantDb = await mongoose.connect(
       `${process.env.DATABASE_URI}/${DB_NAME}`,
     );
+
+    isConnected = connectInstantDb.connections[0].readyState;
+
     console.log(
       `Connect DB !! Connection HOST ", ${connectInstantDb.connection.host}`,
     );
@@ -29,7 +38,7 @@ const connectDB = async () => {
     // export default app;
   } catch (error) {
     console.log("ERROR FROM DATABASE CONNECTION :: ", error);
-    process.exit(1);
+    // process.exit(1);
   }
 };
 
