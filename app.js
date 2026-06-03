@@ -26,10 +26,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:7000", // local
-      "https://clics.vercel.app", // production frontend
-    ],
+    origin: process.env.CLIENT_URL,
     credentials: true,
   }),
 );
