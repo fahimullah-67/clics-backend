@@ -32,10 +32,12 @@ const connectDB = async () => {
       `Connect DB !! Connection HOST ", ${connectInstantDb.connection.host}`,
     );
 
+    // ================== VERCEL CODE (COMMENTED) ==================
     // app.listen(port, () => {
     //   console.log(`CLICS Backend is Running on Port: http://localhost:${port}`);
     // });
     // export default app;
+    // =============================================================
   } catch (error) {
     console.log("ERROR FROM DATABASE CONNECTION :: ", error);
     // process.exit(1);
