@@ -17,7 +17,7 @@ const connectDB = async () => {
     //DATABASE Mongoose Connection
     // mongoose
     //   .connect(
-    //     "mongodb+srv://FahimUllah:fahimclics@cluster0.iy0nrsc.mongodb.net/clics",
+    //     "mongodb+srv://username:password@cluster0.iy0nrsc.mongodb.net/DBname",
     //   )
     //   .then(() => console.log(" DataBase Connect"))
     //   .catch((err) => console.error("DB Error", err));
