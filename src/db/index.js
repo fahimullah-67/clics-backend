@@ -2,7 +2,7 @@ import { app } from "../../app.js";
 import DB_NAME from "../../constant.js";
 import mongoose from "mongoose";
 
-const port = process.env.PORT || 8000;
+// const port = process.env.PORT || 8000;
 // const port = process.env.PORT || 8000;
 // console.log("For Testing:   PORT Running On ", port);
 

@@ -1,5 +1,3 @@
-import fs from "fs";
-import path from "path";
 import DB_NAME from "../../constant.js";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
@@ -18,10 +16,8 @@ const connectDB = async () => {
       `Connect DB !! Connection HOST ", ${connectInstantDb.connection.host}`,
     );
 
-
     // console.log("Done ✅");
     // process.exit();
-
   } catch (error) {
     console.log("ERROR FROM DATABASE CONNECTION :: ", error);
     process.exit(1);
