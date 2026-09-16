@@ -14,14 +14,6 @@ const connectDB = async () => {
       return;
     }
 
-    //DATABASE Mongoose Connection
-    // mongoose
-    //   .connect(
-    //     "mongodb+srv://username:password@cluster0.iy0nrsc.mongodb.net/DBname",
-    //   )
-    //   .then(() => console.log(" DataBase Connect"))
-    //   .catch((err) => console.error("DB Error", err));
-
     const connectInstantDb = await mongoose.connect(
       `${process.env.DATABASE_URI}/${DB_NAME}`,
     );
@@ -32,15 +24,11 @@ const connectDB = async () => {
       `Connect DB !! Connection HOST ", ${connectInstantDb.connection.host}`,
     );
 
-    // ================== VERCEL CODE (COMMENTED) ==================
-    // app.listen(port, () => {
-    //   console.log(`CLICS Backend is Running on Port: http://localhost:${port}`);
-    // });
-    // export default app;
-    // =============================================================
+   
+    
   } catch (error) {
     console.log("ERROR FROM DATABASE CONNECTION :: ", error);
-    // process.exit(1);
+    process.exit(1);
   }
 };
 
